@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+
+	<title>附近美食</title>
+    <!-- <link rel="stylesheet" href="css/sh.css"> -->
+    <link rel="stylesheet" href="css/meishi.min.css?t=20160607">
+	<link rel="stylesheet" href="css/magic.min.css?t=20160607">
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <style type="text/css">
+        iframe.cur{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border:none;
+            outline: none;            
+            z-index: 2500;
+        }
+    </style>
+</head>
+<body>
+    <div class="page page-current">
+        <div class="content">
+            <!-- 头部背景图 -->
+            <div class="head-bg">
+                <img src="img/hd-bg.png" alt="LOADING">
+            </div>
+            <!-- 美食列表 -->
+            <div class="meis-list-block">
+                <div class="list-block" id="meisListsBlock"></div>
+                <div class="loadMore" id="loadMore">查看更多</div>
+                <input type="hidden" id="storageID"/>
+                <input type="hidden" id="storageComment"/>
+            </div> 
+            <span id="anchor"></span>
+        </div>
+        <div id="addMs" data-url="meishi3.html">添加美食</div>
+    </div>
+    <script type="text/javascript" src="js/sh.js"></script>
+    <script type="text/javascript" src="js/meishi.js?t=20160607"></script>
+    <script type="text/javascript">
+        $(function(){
+            "use strict";
+            /*请求列表数据*/
+            M.MsLists(1);
+            /*点赞&踩&评论*/
+            $(document).on('click','.link',function(e){
+                var a= $(this),b=a.html(),c=a.parent().find('[data-like="like"]'),d=a.parent().find('[data-dislike="dislike"]'),f=a.parent().find('[data-comment="comment"]'),h=a.data('disabled'),
+                i=a.data('like'),j=a.data('dislike'),k=a.data('comment'),n=a.parent().find('[data-disabled="true"]').length,g="msComment.html",id=a.closest('li').data('id');
+                if(h=="true") return;
+                //评论跳转
+                if(k){
+                    var tt = new Date().getTime();
+                    location.href=g+"?d="+id+"&tk="+encodeURI($.getPar('token'))+"&f="+b+"&tt="+tt;
+                }
+                //点赞
+                if(i){
+                    b++;
+                    a.html(b);
+                    a.attr('data-disabled',true);
+                    
+                    if(n>0){
+                        var dislikeNum=d.html();
+                        if(dislikeNum>0){
+                            dislikeNum--;
+                            d.html(dislikeNum);
+                            d.attr('data-disabled',false);
+                            //更新点赞
+                            M.setLikeValue(id,1,-1,function(){
+                                d.removeClass('dislove')
+                                a.addClass('magictime puffIn love');
+                            })
+                        }
+
+                    }else{
+                        //更新点赞
+                        M.setLikeValue(id,1,0,function(){
+                            a.addClass('magictime puffIn love');
+                        })
+                    }
+                                        
+                }
+                //踩
+                if(j){
+                    b++;
+                    a.html(b);
+                    a.attr('data-disabled',true);
+                    if(n>0){
+                        var likeNum=c.html();
+                        if(likeNum>0){
+                            likeNum--;
+                            c.html(likeNum);
+                            c.attr('data-disabled',false);
+                            //更新踩
+                            M.setLikeValue(id,-1,1,function(){
+                                c.removeClass('love')
+                                a.addClass('magictime puffIn dislove');
+                            })
+                        }
+                    }else{
+                        //更新踩
+                        M.setLikeValue(id,0,1,function(){
+                            a.addClass('magictime puffIn dislove');
+                        })
+                    }
+                }
+                a.removeClass('magictime puffIn');
+                return false;
+            })
+            /*跳转详情*/
+            var flag=false;
+            $(document).on('click','.item-content',function(){
+                var b = $(this),c=b.data("url")||"",d=b.parent().data("ID"),tk=encodeURI($.getPar('token')),temptime = new Date().getTime();
+                //history.pushState()和history.replaceState()
+                var origin=location.origin,pathname=location.pathname;
+                var newURL =origin+pathname.replace('meishi','meishi2')+"?d="+d+"&tk="+tk+"&t="+temptime;
+                var isHistoryApi = !!(window.history && history.pushState);
+                if(isHistoryApi){
+                    history.pushState(null, "", newURL);
+                    if(flag){
+                        history.replaceState(null, "", newURL);
+                    }
+                    $('body').append('<iframe id="iframe" src="'+newURL+'" class="cur"></iframe>')
+                    flag=true;
+                }else{
+                    console.log('浏览器不支持history.pushState')
+                    location.href=newURL;
+                }
+            })
+            /*跳转添加美食*/
+            $(document).on('click','#addMs',function(){
+                var b = $(this),c=b.data("url")||"",tk=encodeURI($.getPar('token')),temptime = new Date().getTime();
+                location.href=c+"?tk="+tk+"&t="+temptime;
+            })
+            //查看更多
+            $(document).on("click","#loadMore",function(){
+                var l=$(".card","#meisListsBlock").length,yu=parseInt(l%10);
+                if ((yu<10)&&(yu>0))
+                {
+                    $(this).html('- End -').show();
+                }else {
+                    var num=parseInt(l/10)+1;
+                    M.MsLists(num);
+                }
+            })
+            //前进&后退
+            $(window).on("popstate", function(e) {
+                $('#iframe').remove();
+            });
+        })
+    </script>
+</body>
+</html>

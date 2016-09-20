@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+	<title>添加美食</title>
+	<link rel="stylesheet" href="css/meishi.min.css?t=0525">
+    <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
+
+    <style type="text/css">
+        body,.page{
+            background: transparent;
+        }
+        body{
+            background: rgba(255,255,255,.4);
+            /*-webkit-filter:grayscale(1);
+            -webkit-filter:blur(1);*/
+        }
+        .weui_cell_primary {
+            -webkit-box-flex: 1; 
+            -webkit-flex: 1; 
+            -ms-flex: 1;
+            flex: 1;
+        }
+        .weui_cell {
+            padding: .5rem .5rem;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+        .weui_textarea {
+            display: block;
+            border: 0;
+            resize: none;
+            width: 100%;
+            color: inherit;
+            font-size: 1em;
+            line-height: inherit;
+            outline: 0;
+        }
+        .align-block-title{
+            min-height: 2.2rem;
+            padding-left: .75rem;
+        }
+        .list-block-nav, .meis-block-title {
+            position: relative;
+            margin: 0;
+            margin: 1rem .5rem .5rem;
+            overflow: hidden;
+            font-size: .8rem;
+            line-height: 1;
+            color: #6d6d72;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .weui_uploader_bd {
+            overflow: hidden;
+            margin: 0 .5rem;
+        }
+        .weui_uploader_files {
+            list-style: none;
+        }
+        .weui_uploader_file {
+            float: left;
+            margin-right: .4rem;
+            margin-bottom: .5rem;
+            width: 4rem;
+            height: 4rem;
+            background: no-repeat 50%;
+            background-size: cover;
+            list-style: none;
+        }
+        .weui_uploader_status:before {
+            content: " ";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0,0,0,.5);
+        }
+        .weui_uploader_input_wrp {
+            float: left;
+            position: relative;
+            margin-right: .5rem;
+            margin-bottom: .5rem;
+            width: 4rem;
+            height: 4rem;
+            border: 1px solid #d9d9d9;
+        }
+        .weui_uploader_input_wrp:after, .weui_uploader_input_wrp:before {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+            background-color: #d9d9d9;
+        }
+        .weui_uploader_input_wrp:before {
+            width: 2px;
+            height: 2rem;
+        }
+        .weui_uploader_input_wrp:after {
+            width: 2rem;
+            height: 2px;
+        }
+        .weui_uploader_input {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        .weui_label {
+            display: block;
+            width: 105px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+        .weui_cell_primary {
+             -webkit-box-flex: 1; 
+             -webkit-flex: 1; 
+            -ms-flex: 1;
+            flex: 1;
+        }
+        .weui_input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            -webkit-appearance: none;
+            background-color: transparent;
+            font-size: inherit;
+            color: inherit;
+            height: 1.41176471em;
+            line-height: 1.41176471;
+        }
+        .weui_cell:after, .weui_cell:before {
+            content: " ";
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            color: #d9d9d9;
+        }
+        /*.weui_cell:before {
+            top: 0;
+            border-top: 1px solid #d9d9d9;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: scaleY(.5);
+            transform: scaleY(.5);
+        }*/
+        .weui_cell:after {
+            bottom: 0;
+            border-bottom: 1px solid #d9d9d9;
+            -webkit-transform-origin: 0 100%;
+            transform-origin: 0 100%;
+            -webkit-transform: scaleY(.5);
+            transform: scaleY(.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="page page-current" id="meishi3">
+        <!-- 提交按钮 -->
+        <div class="bar bar-standard bar-footer">
+            <a href="#" class="button button-blue" id="msSub">提交</a>
+        </div>
+		<div class="content">
+            <!-- 头部背景图 -->
+            <!-- <div class="head-bg">
+                <img src="img/hd-bg.png" alt="LOADING">
+            </div> -->
+            <!-- 添加美食 -->
+            <div class="list-block" id="meisListsBlock">
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">推荐店名：</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" type="text" id="tjName">
+                    </div>
+                </div>
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">餐馆地址：</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" type="text" id="tjAddress">
+                    </div>
+                </div>
+                <div class="list-block-nav">推荐理由：</div>
+                <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <textarea class="weui_textarea" placeholder="请填写理由" rows="3" id="tjReason"></textarea>
+                    </div>
+                </div>
+                <div class="list-block-nav">上传图片</div>
+                <div class="weui_uploader_bd">
+                    <ul class="weui_uploader_files">
+                        <!-- <li class="weui_uploader_file" style="background-image:url(http://shp.qpic.cn/weixinsrc_pic/pScBR7sbqjOBJomcuvVJ6iacVrbMJaoJZkFUIq4nzQZUIqzTKziam7ibg/)"></li> -->
+                    </ul>
+                    <div class="weui_uploader_input_wrp">
+                        <input id="file-input-btn" class="weui_uploader_input" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple="">
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+    <script type="text/javascript" src="js/sh.js"></script>
+    <script type="text/javascript" src="js/uploadPicture/mobileBUGFix.mini.js" ></script>
+    <script type="text/javascript" src="js/uploadPicture/exif.js" ></script>
+    <script type="text/javascript" src="js/meishi.js?t=20160607"></script>
+    <script type="text/javascript">
+    $(function(){
+        // 添加图片
+        $(document).on("change", "#file-input-btn", function() {
+            var _this = $('#file-input-btn')[0];
+            M.selectFileImage(_this);
+        })
+        // 删除图片
+        $(document).on("click", ".weui_uploader_file", function(){
+            M.MsDelete($(this),$(this).index());
+        })
+        //提交操作
+        $(document).on("click", "#msSub", function() {
+                M.MsUpload();
+        })
+    })
+    </script>
+</body>
+</html>

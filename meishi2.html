@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+
+	<title>附近美食</title>
+    <link rel="stylesheet" href="css/sh.css">
+    <link rel="stylesheet" href="css/meishi.min.css?t=20160607">
+    <link rel="stylesheet" href="css/magic.min.css?t=20160607">
+    <link rel="stylesheet" href="css/sh-swiper.css?t=20160607">
+    <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
+</head>
+<body>
+    <div class="page page-current" id="meishi2">
+        <!-- 底部评论 -->
+        <div class="bar bar-standard bar-footer">
+            <div class="toolbar-inner">
+                <a class="tab-link" id="updateLove">
+                    <i class="icon tabbar-icon-1"></i>
+                    <span class="tabbar-label">点赞</span>
+                </a>
+                <a class="tab-link" id="commentText">
+                    <i class="icon tabbar-icon-2"></i>
+                    <span class="tabbar-label">评论</span>
+                </a>
+               <!--  <a class="tab-link">
+                    <i class="icon tabbar-icon-3"></i>
+                    <span class="tabbar-label">晒图</span>
+                </a> -->
+            </div>
+        </div>
+		<div class="content">
+            <!-- 美食详情 -->
+            <div class="meishi-header addMsImage" data-url="msImage.html">
+                <div class="meishi-header-content">
+                    <div class="meishi-header-title"></div>
+                    <div class="meishi-header-bottom">相册(0)</div>
+                </div>
+            </div>
+            <!-- 美食地址 -->
+            <div class="meishi-subheader" data-url="msImage.html">
+                <div class="meishi-subheader-content list-block">
+                    <a class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title" id="meishi-address"  style="color:#333;">舌尖上的美食</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="meis-list-block">
+                <div class="meishi-subheader-content list-block">
+                    <a class="item-content addMsImage">
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title" style="color:#333;"><span id="ms-create-name" style="color:#44D2B1;"></span>推荐这家店</div>
+                                <div class="item-after"><i class="icon camera-icon"></i></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="list-block" id="meisListsBlock"></div>
+                <!--图片展示-->
+                <!--推荐理由-->
+                <div class="tj-list-block">
+                    <div class="meis-block-title">推荐理由</div>
+                    <div class="tj-reason">推荐理由</div>
+                </div>
+            </div>
+             
+            <!--饭友评论  -->
+            <div class="comment-list-block">
+                <div class="list-block-nav" id="fanyouComments">饭友评论(<span>0</span>)</div>
+                <div class="list-block" id="meisCommentListsBlock"></div>
+                <div class="loadMore" id="loadMore">查看更多评论</div>
+                <input type="hidden" id="storageID"/>
+                <input type="hidden" id="storageComment"/>
+                <input type="hidden" id="storageUrls"/>
+            </div>
+        </div>
+	</div>
+    <!-- 弹出评论区 -->
+    <div class="comment-tanchu tanchu-bar" id="tanchu-bar">
+        <div class="commentbar" >
+            <div class="commentbar1">
+                <div class="commentbar-input">
+                    <textarea id="commentTextarea" autofocus placeholder="请输入你的评论"></textarea>
+                </div>
+            </div>
+            <div class="commentbar2" style="display: none">
+                <div class="list-block-nav">上传图片</div>
+            </div>
+            <div class="weui_uploader_bd">
+                <ul class="weui_uploader_files">
+                </ul>
+                <div class="weui_uploader_input_wrp">
+                    <input class="weui_uploader_input" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple="">
+                </div>
+            </div>
+            <div class="button-content txt-right commentbar2" style="display: none">
+                <a class="commentbar-confirm" id="msSub">提交</a>
+            </div>
+            <div class="button-content txt-right commentbar1">
+                <a class="commentbar-confirm" id="commentbar-confirm">发表</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/sh.js"></script>
+    <script type="text/javascript" src="js/sh-swiper.js"></script>
+    <script type="text/javascript" src="js/uploadPicture/mobileBUGFix.mini.js" ></script>
+    <script type="text/javascript" src="js/uploadPicture/exif.js" ></script>
+    <script type="text/javascript" src="js/meishi.js?t=20160607"></script>
+    <script type="text/javascript">
+        $(function(){
+            "use strict";
+            $('#commentText').on("click",function(){
+                $('.commentbar1').fadeIn('slow');
+                $('.commentbar2').fadeOut('fast');
+                $("#tanchu-bar").addClass('tanchu-in').focus()
+                $("body").append('<div class="comment-overlay comment-overlay-visible"></div>')
+            })
+            $(document).on("click",'.comment-overlay',function(){
+                $(this).remove();
+                $("#tanchu-bar").removeClass('tanchu-in')
+            })
+            //发表评论
+            $(document).on("click",'#commentbar-confirm',function(){
+                $(".comment-overlay").remove();
+                $("#tanchu-bar").removeClass('tanchu-in')
+                M.addCmtList();
+            })
+            //查看更多评论
+            $(document).on("click",'#loadMore',function(){
+                var d = $("#storageID").val(),c="msComment.html",f=$("#storageComment").val();
+                location.href=c+"?d="+d+"&f="+f+"&tk="+encodeURI($.getPar('tk'));
+            })
+            /*详情页面*/
+            M.MsDetail($.getPar('d'));
+            /*评论列表*/
+            M.CommentLists(1);
+            // 添加图片
+            $(document).on("change", ".weui_uploader_input", function() {
+                var _this = $(this)[0];
+                M.selectFileImage(_this);
+            })
+            // 删除图片
+            $(document).on("click", ".weui_uploader_file", function(){
+                M.MsDelete($(this),$(this).index());
+            })
+            /*跳转美食推荐页面*/
+            $(document).on('click','.addMsImage',function(){
+                // var b = $(this),c=b.data("url")||"",d=encodeURI($.getPar('d')),tk=encodeURI($.getPar('tk')),temptime = new Date().getTime();
+                // location.href=c+"?d="+d+"&tk="+tk+"&t="+temptime;
+                $("#tanchu-bar").addClass('tanchu-in')
+                $("body").append('<div class="comment-overlay comment-overlay-visible"></div>')
+                $('.commentbar2').fadeIn('slow');
+                $('.commentbar1').fadeOut('fast');
+            })
+            /*跳转到地图*/
+            $(document).on('click','.meishi-subheader',function(){
+                // var b = $(this),c=b.data("url")||"",tk=encodeURI($.getPar('tk')),temptime = new Date().getTime();
+                // location.href=c+"?tk="+tk+"&t="+temptime;
+            })
+            //点赞
+            $(document).on('click','#updateLove',function(){
+                var a= $(this),h=a.data('disabled'),id=$("#storageID").val();
+                if(h=="true") return;
+                //更新点赞
+                M.setLikeValue(id,1,0,function(){
+                    a.find('.tabbar-icon-1').addClass('magictime puffIn love');
+                })
+            })
+            //提交操作
+            $(document).on("click", "#msSub", function() {
+                M.MsAddImages();
+            })
+        })
+        $(window).onload=function(){
+            $(document).on("error",'.item-media img',function(){
+                $(this).attr('src', './img/default.png');
+            })
+        }
+    </script>
+</body>
+</html>
